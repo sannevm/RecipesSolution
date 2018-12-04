@@ -41,6 +41,14 @@ namespace Recipes
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            // Configure CORS so the API allows requests from JavaScript.
+            // All origins/headers/methods are allowed.
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOriginsHeadersAndMethods",
+                builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -69,6 +77,11 @@ namespace Recipes
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            // Enable CORS
+            app.UseCors("AllowAllOriginsHeadersAndMethods");
+            app.UseMvc();
         }
+
     }
 }
